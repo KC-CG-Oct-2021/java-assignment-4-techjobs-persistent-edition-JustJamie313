@@ -64,7 +64,7 @@ public class HomeController {
         }
 
         newJob.setEmployer(employerRepository.findById(employerId).get());
-        newJob.setSkills(skillsList);
+//        newJob.setSkills(skillRep);
         jobRepository.save(newJob);
         return "redirect:";
     }
