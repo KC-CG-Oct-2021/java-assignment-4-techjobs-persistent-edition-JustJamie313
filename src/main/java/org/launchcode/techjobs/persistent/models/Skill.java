@@ -13,18 +13,14 @@ import java.util.List;
 @Entity
 public class Skill extends AbstractEntity {
     @ManyToMany(mappedBy = "skills")
-    private final List<Job> jobs = new ArrayList<>();
+    private List<Job> jobs = new ArrayList<>();
     @NotBlank(message="Skills is required.")
     @Size(max=255,message = "Skills must be 255 characters or less")
     private String description;
 
-    @Autowired
-    private JobRepository jobRepository;
-
-
     public Skill(List<Job> jobs, String description) {
         super();
-        this.jobs = (List<Job>) jobRepository.findAll();
+        this.jobs = jobs;
         this.description = description;
     }
 

@@ -1,5 +1,6 @@
 package org.launchcode.techjobs.persistent.controllers;
 
+import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Job;
 import org.launchcode.techjobs.persistent.models.Skill;
 import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
@@ -15,6 +16,8 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Objects.isNull;
 
 /**
  * Created by LaunchCode
@@ -52,15 +55,14 @@ public class HomeController {
             model.addAttribute("skills",skillRepository.findAll());
             return "add";
         }
-
-        newJob.setEmployer(employerRepository.findById(employerId).get());
-
-        if(!skills.isEmpty()){
-            List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
-            for(Skill skill:skillObjs){
-                newJob.addSkills(skill);
-            }
+        Optional<Employer> optionalEmployer = employerRepository.findById(employerId);
+        if(optionalEmployer.isPresent()){
+            Employer employer = optionalEmployer.get();
+            newJob.setEmployer(employer);
         }
+
+        List<Skill> result = (List<Skill>) skillRepository.findAllById(skills);
+        newJob.setSkills(result);
 
         jobRepository.save(newJob);
         model.addAttribute("jobs",jobRepository.findAll());
@@ -72,6 +74,5 @@ public class HomeController {
         model.addAttribute("job",jobRepository.findById(jobId).get());
         return "view";
     }
-
 
 }
